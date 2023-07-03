@@ -165,7 +165,7 @@ class MetalArchivesPlugin(BeetsPlugin):
         """
         albums = []
         try:
-            results = metallum.album_search(album, band=artist, strict=False, band_strict=False, formats=['CD'])
+            results = metallum.album_search(album, band=artist, strict=False, band_strict=False, formats=['CD','Digital'])
         except metallum.NetworkError as e:
             self._log.debug('network error: {0}', e)
             return
