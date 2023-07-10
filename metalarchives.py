@@ -165,10 +165,17 @@ class MetalArchivesPlugin(BeetsPlugin):
         """
         albums = []
         try:
-            results = metallum.album_search(album, band=artist, strict=False, band_strict=False, formats=['CD','Digital'])
+            results = metallum.album_search(album, band=artist, strict=False, band_strict=False, formats=['CD','Digital','Cassette*','Vinyl*'])
         except metallum.NetworkError as e:
             self._log.debug('network error: {0}', e)
             return
+
+        original_year = 9999
+        for result in results:
+            if result.get().year < original_year:
+                original_year = result.get().year
+        if original_year == 9999:
+            original_year = '0000'
 
         for result in results:
             try:
@@ -176,11 +183,11 @@ class MetalArchivesPlugin(BeetsPlugin):
             except metallum.NetworkError as e:
                 self._log.debug('network error: {0}', e)
                 continue
-            albums.append(self.get_album_info(album))
+            albums.append(self.get_album_info(album, original_year))
 
         return albums
 
-    def get_album_info(self, album):
+    def get_album_info(self, album, orig_year):
         """Returns an AlbumInfo object for a Metal Archives album object.
         """
         artist = album.bands[0]
@@ -196,7 +203,7 @@ class MetalArchivesPlugin(BeetsPlugin):
         band_names = " / ".join([band.name for band in album.bands])
         return AlbumInfo(tracks, album.title, album_id, band_names, artist.id,
                          albumtype=album.type, va=False, year=album.year, month=album.date.month,
-                         day=album.date.day, label=album.label, mediums=album.disc_count,
+                         day=album.date.day, original_year=orig_year, label=album.label, mediums=album.disc_count,
                          country=country, data_source=DATA_SOURCE, data_url=metallum.BASE_URL + '/' + album.url)
 
     def get_tracks(self, tracklist):
