@@ -172,7 +172,7 @@ class MetalArchivesPlugin(BeetsPlugin):
 
         original_year = 9999
         for result in results:
-            if result.get().year < original_year:
+            if result.get().year > 1000 and result.get().year < original_year:
                 original_year = result.get().year
         if original_year == 9999:
             original_year = '0000'
