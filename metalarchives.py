@@ -204,7 +204,8 @@ class MetalArchivesPlugin(BeetsPlugin):
         return AlbumInfo(tracks, album.title, album_id, band_names, artist.id,
                          albumtype=album.type, va=False, year=album.year, month=album.date.month,
                          day=album.date.day, original_year=orig_year, label=album.label, mediums=album.disc_count,
-                         country=country, data_source=DATA_SOURCE, data_url=metallum.BASE_URL + '/' + album.url)
+                         country=country, data_source=DATA_SOURCE, data_url=metallum.BASE_URL + '/' + album.url,
+                         catalognum=album.catalog_id)
 
     def get_tracks(self, tracklist):
         """Returns a list of TrackInfo objects for a Metal Archives tracklist.
